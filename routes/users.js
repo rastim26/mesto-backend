@@ -30,6 +30,10 @@ router.post('/users', (req, res) => {
   res.send(
     `<html>
     <body>
+    ${name}
+    ${about}
+    ${avatar}
+    ${JSON.stringify(req.body)}
           <p>The document has been created!</p>
     </body>
     </html>`
