@@ -26,13 +26,10 @@ router.post('/users', (req, res) => {
     // вернём записанные в базу данные
     .then(user => res.send({ data: user }))
     // данные не записались, вернём ошибку
-    .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(err => res.status(500).send({ message: err }));
   res.send(
     `<html>
     <body>
-    ${name}
-    ${about}
-    ${avatar}
     ${JSON.stringify(req.body)}
           <p>The document has been created!</p>
     </body>

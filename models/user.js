@@ -20,3 +20,7 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('user', userSchema);
+
+module.exports.createCard = (req, res) => {
+  console.log(req.user._id);
+};
