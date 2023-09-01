@@ -15,12 +15,9 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    // required: true
+    required: true
   }
 });
 
 module.exports = mongoose.model('user', userSchema);
 
-module.exports.createCard = (req, res) => {
-  console.log(req.user._id);
-};
