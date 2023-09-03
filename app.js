@@ -1,17 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const helmet = require('helmet');
 
 const { PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
-const app = express(DB_URL);
+const app = express();
 
-mongoose.connect();
+mongoose.connect(DB_URL);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(helmet());
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '64f1e84f47c84d9cc412b76e',
+    _id: '64f4ac908275f43765643ed7',
   };
   next();
 });

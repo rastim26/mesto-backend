@@ -1,35 +1,31 @@
 const Card = require('../models/card');
-
-const errorMsg = {
-  ValidationError: 'Переданы некорректные данные',
-  CastError: 'Запрашиваемая запись не найдена',
-  500: 'Произошла ошибка',
-};
-
-const errorHandler = (err, res) => {
-  if (err.name === 'ValidationError') return res.status(400).send({ message: errorMsg[err.name] });
-  if (err.name === 'CastError') return res.status(404).send({ message: errorMsg[err.name] });
-
-  return res.status(500).send({ message: errorMsg[500] });
-};
+const { errorHandler } = require('../utils/utils');
 
 const getCards = (req, res) => {
   Card.find({})
+    .orFail(new Error('NotValidId'))
     .then((card) => res.send({ data: card }))
-    .catch((err) => errorHandler(err, res));
+    .catch((err) => {
+      errorHandler(err, res);
+    });
 };
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(201).send({ data: card }))
-    .catch((err) => errorHandler(err, res));
+    .then((cards) => res.status(201).send({ data: cards }))
+    .catch((err) => {
+      errorHandler(err, res);
+    });
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findByIdAndRemove(req.params.cardId)
+    .orFail(new Error('NotValidId'))
     .then((card) => res.send({ data: card }))
-    .catch((err) => errorHandler(err, res));
+    .catch((err) => {
+      errorHandler(err, res);
+    });
 };
 
 const likeCard = (req, res) => {
@@ -38,8 +34,11 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch((err) => errorHandler(err, res));
+    .orFail(new Error('NotValidId'))
+    .then((card) => res.status(201).send({ data: card }))
+    .catch((err) => {
+      errorHandler(err, res);
+    });
 };
 
 const dislikeCard = (req, res) => {
@@ -48,8 +47,11 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
+    .orFail(new Error('NotValidId'))
     .then((card) => res.send({ data: card }))
-    .catch((err) => errorHandler(err, res));
+    .catch((err) => {
+      errorHandler(err, res);
+    });
 };
 
 module.exports = {
