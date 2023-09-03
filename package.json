@@ -2,7 +2,7 @@
   "name": "mesto-fullstack",
   "version": "1.0.0",
   "description": "Проект Mesto фронтенд + бэкенд",
-  "main": "index.js",
+  "main": "app.js",
   "private": true,
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -10,6 +10,7 @@
     "mongoose": "^7.4.4"
   },
   "devDependencies": {
+    "eslint": "^8.48.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.28.1",
     "nodemon": "^3.0.1"
