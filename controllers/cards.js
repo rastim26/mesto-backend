@@ -20,12 +20,16 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .orFail(new Error('NotValidId'))
-    .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      errorHandler(err, res);
-    });
+  const { _id } = req.user;
+  const { cardId } = req.body;
+  if (_id === cardId) {
+    Card.findByIdAndRemove(req.params.cardId)
+      .orFail(new Error('NotValidId'))
+      .then((card) => res.send({ data: card }))
+      .catch((err) => {
+        errorHandler(err, res);
+      });
+  }
 };
 
 const likeCard = (req, res) => {
