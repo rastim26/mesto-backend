@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
@@ -6,29 +5,31 @@ const {
   updateUserInfo, updateUserAvatar,
 } = require('../controllers/users');
 
-router.get('/', celebrate({
-  body: Joi.object().keys({
+router.get('/', getUsers);
+router.get('/me', getUserInfo);
 
-  }),
-}), getUsers);
-router.get('/me', celebrate({
-  body: Joi.object().keys({
-
-  }),
-}), getUserInfo);
 router.get('/:userId', celebrate({
-  body: Joi.object().keys({
-
+  params: Joi.object().keys({
+    userId: Joi.string().alfanum().length(24),
   }),
 }), getUserInfo);
+
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+  }),
+  user: Joi.object().keys({
+    _id: Joi.string().required().alfanum().length(24),
   }),
 }), updateUserInfo);
+
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-
+    avatar: Joi.string().domain(),
+  }),
+  user: Joi.object().keys({
+    _id: Joi.string().required().alfanum().length(24),
   }),
 }), updateUserAvatar);
 
