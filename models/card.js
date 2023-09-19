@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { ObjectId } = require('mongodb');
 
 const cardSchema = new mongoose.Schema({

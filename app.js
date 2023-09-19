@@ -16,25 +16,21 @@ app.use(helmet());
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.auth(auth);
+app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-// app.post('/', (req, res) => {
-//   res.send(
-//     `<html>
-//     <body>
-//         ${req.body}
-//         ${req.body.name}
-//         ${req.body.about}
-//         ${req.body.avatar}
-//         ${JSON.stringify(req.body)}
-
-//         <p>Ответ на сигнал из далёкого космоса</p>
-//     </body>
-//     </html>`
-//   );
-// });
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+  next();
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

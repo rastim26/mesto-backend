@@ -1,22 +1,19 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const { errorHandler } = require('../utils/utils');
+const NotFoundError = require('../errors/not-found-err');
+const AlreadyExistsError = require('../errors/already-exists-err');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
     .then((users) => {
       res.send({ data: users });
     })
-    .catch((err) => {
-      errorHandler(err, res);
-    });
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -30,11 +27,12 @@ const createUser = (req, res) => {
     }))
     .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
-      errorHandler(err, res);
+      if (err.code === 11000) throw new AlreadyExistsError('Данный email уже зарегистрирован!');
+      next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials({ email, password })
     .then(() => {
@@ -50,50 +48,42 @@ const login = (req, res) => {
         })
         .end();
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-const getUserInfo = (req, res) => {
+const getUserInfo = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
     .then((user) => {
       res.send({ data: user });
     })
-    .catch((err) => {
-      errorHandler(err, res);
-    });
+    .catch(next);
 };
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findOneAndUpdate(
     { _id: req.user._id },
     { name, about },
     { new: true, runValidators: true },
   )
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      errorHandler(err, res);
-    });
+    .catch(next);
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findOneAndUpdate(
     { _id: req.user._id },
     { avatar },
     { new: true, runValidators: true },
   )
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
     .then((user) => {
       res.send({ data: user });
     })
-    .catch((err) => {
-      errorHandler(err, res);
-    });
+    .catch(next);
 };
 
 module.exports = {
