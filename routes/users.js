@@ -10,7 +10,7 @@ router.get('/me', getUserInfo);
 
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alfanum().length(24),
+    userId: Joi.string().alphanum().length(24),
   }),
 }), getUserInfo);
 
@@ -20,7 +20,7 @@ router.patch('/me', celebrate({
     about: Joi.string().min(2).max(30),
   }),
   user: Joi.object().keys({
-    _id: Joi.string().required().alfanum().length(24),
+    _id: Joi.string().required().alphanum().length(24),
   }),
 }), updateUserInfo);
 
@@ -29,7 +29,7 @@ router.patch('/me/avatar', celebrate({
     avatar: Joi.string().domain(),
   }),
   user: Joi.object().keys({
-    _id: Joi.string().required().alfanum().length(24),
+    _id: Joi.string().required().alphanum().length(24),
   }),
 }), updateUserAvatar);
 

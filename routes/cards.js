@@ -13,34 +13,34 @@ router.post('/', celebrate({
     link: Joi.string().required().domain(),
   }),
   user: Joi.object().keys({
-    _id: Joi.string().required().alfanum().length(24),
+    _id: Joi.string().required().alphanum().length(24),
   }),
 }), createCard);
 
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alfanum().length(24),
+    cardId: Joi.string().alphanum().length(24),
   }),
   user: Joi.object().keys({
-    _id: Joi.string().required().alfanum().length(24),
+    _id: Joi.string().required().alphanum().length(24),
   }),
 }), deleteCard);
 
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alfanum().length(24),
+    cardId: Joi.string().alphanum().length(24),
   }),
   user: Joi.object().keys({
-    _id: Joi.string().required().alfanum().length(24),
+    _id: Joi.string().required().alphanum().length(24),
   }),
 }), likeCard);
 
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alfanum().length(24),
+    cardId: Joi.string().alphanum().length(24),
   }),
   user: Joi.object().keys({
-    _id: Joi.string().required().alfanum().length(24),
+    _id: Joi.string().required().alphanum().length(24),
   }),
 }), dislikeCard);
 
