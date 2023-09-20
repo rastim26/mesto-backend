@@ -27,8 +27,8 @@ const createUser = (req, res, next) => {
     }))
     .then(() => res.status(201).send({ message: 'Пользователь добавлен!' }))
     .catch((err) => {
-      if (err.code === 11000) next(new AlreadyExistsError('Данный email уже зарегистрирован!'));
-      next(err);
+      if (err.code === 11000) return next(new AlreadyExistsError('Данный email уже зарегистрирован!'));
+      return next(err);
     });
 };
 
