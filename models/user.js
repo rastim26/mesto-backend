@@ -42,17 +42,18 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Поле "password" должно быть заполнено'],
     select: false,
     minlength: [4, 'Минимальная длина поля "about" - 4'],
-    maxlength: [8, 'Максимальная длина поля "about" - 8'],
   },
 }, { versionKey: false });
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function ({ email, password }) {
   this.findOne({ email }).select('+password')
     .orFail(new UnauthorizedError('Неправильные почта или пароль'))
     .then((user) => {
       bcrypt.compare(password, user.password)
-        .orFail(new UnauthorizedError('Неправильные почта или пароль'))
-        .then(user);
+        .then((matched) => {
+          if (!matched) throw new UnauthorizedError('Неправильные почта или пароль');
+          return user;
+        });
     });
 };
 

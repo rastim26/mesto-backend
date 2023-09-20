@@ -19,17 +19,11 @@ router.patch('/me', celebrate({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   }),
-  user: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
-  }),
 }), updateUserInfo);
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().domain(),
-  }),
-  user: Joi.object().keys({
-    _id: Joi.string().required().alphanum().length(24),
   }),
 }), updateUserAvatar);
 
