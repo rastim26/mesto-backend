@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 
-const urlPattern = /^https?:\/\/w{0,3}\.?[\w-]+\.\w{1,3}[\w\-._~:\/?#[\]@!$&'()*+,;=]*#?$/;
+const urlPattern = /^https?:\/\/w{0,3}\.?[\w-]+\.\w{1,3}[\w\-._~:/?#[\]@!$&'()*+,;=]*#?$/;
 
 const validateSigninFields = celebrate({
   body: Joi.object().keys({

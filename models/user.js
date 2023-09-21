@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     required: [false, 'Поле "avatar" должно быть заполнено'],
     validate: {
-      validator: (v) => /^https?:\/\/w{0,3}\.?[\w-]+\.\w{1,3}[\w\-._~:\/?#[\]@!$&'()*+,;=]*#?$/.test(v),
+      validator: (v) => /^https?:\/\/w{0,3}\.?[\w-]+\.\w{1,3}[\w\-._~:/?#[\]@!$&'()*+,;=]*#?$/.test(v),
       message: 'Некорректный URL',
     },
   },
