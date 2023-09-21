@@ -52,7 +52,7 @@ const login = (req, res, next) => {
 };
 
 const getUserInfo = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.params.userId || req.user._id)
     .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
     .then((user) => {
       res.send({ data: user });
@@ -62,8 +62,8 @@ const getUserInfo = (req, res, next) => {
 
 const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
-  User.findOneAndUpdate(
-    { _id: req.user._id },
+  User.findByIdAndUpdate(
+    req.user._id,
     { name, about },
     { new: true, runValidators: true },
   )
@@ -74,8 +74,8 @@ const updateUserInfo = (req, res, next) => {
 
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findOneAndUpdate(
-    { _id: req.user._id },
+  User.findByIdAndUpdate(
+    req.user._id,
     { avatar },
     { new: true, runValidators: true },
   )

@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Поле "name" должно быть заполнено'],
     validate: {
-      validator: (v) => validator.isEmail(v),
+      validator: (v) => validator.isURL(v),
       message: 'Некорректная ссылка',
     },
   },

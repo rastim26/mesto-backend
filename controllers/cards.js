@@ -1,4 +1,5 @@
 const NotFoundError = require('../errors/not-found-err');
+const UnauthorizedError = require('../errors/unauthorized-err');
 const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
@@ -16,14 +17,17 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  const { _id } = req.user;
-  const { cardId } = req.body;
-  if (_id === cardId) {
-    Card.findByIdAndRemove(req.params.cardId)
-      .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
-      .then((card) => res.send({ data: card }))
-      .catch(next);
-  }
+  const userId = req.user._id;
+  const { cardId } = req.params;
+
+  Card.findById(cardId)
+    .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
+    .then((card) => {
+      if (userId !== card.owner) throw new UnauthorizedError('У вас недостаточно прав');
+      Card.findByIdAndRemove(cardId)
+        .then(() => res.send({ data: card }));
+    })
+    .catch(next);
 };
 
 const likeCard = (req, res, next) => {
