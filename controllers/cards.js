@@ -1,5 +1,5 @@
 const NotFoundError = require('../errors/not-found-err');
-const UnauthorizedError = require('../errors/unauthorized-err');
+const ForbiddenError = require('../errors/forbidden-err');
 const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
@@ -23,8 +23,8 @@ const deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .orFail(new NotFoundError('Запрашиваемая запись не найдена'))
     .then((card) => {
-      if (userId !== card.owner) throw new UnauthorizedError('У вас недостаточно прав');
-      Card.findByIdAndRemove(cardId)
+      if (userId !== card.owner.toString()) throw new ForbiddenError('У вас недостаточно прав');
+      Card.deleteOne(card)
         .then(() => res.send({ data: card }));
     })
     .catch(next);
