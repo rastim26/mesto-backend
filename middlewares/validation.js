@@ -52,6 +52,7 @@ const validateAvatar = celebrate({
 });
 
 module.exports = {
+  urlPattern,
   validateSigninFields,
   validateSignupFields,
   validateCardFields,
